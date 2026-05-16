@@ -3,45 +3,127 @@ import { useEffect } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// จุดสำคัญบนถนนพระราม 2
-const pins = [
-  { id: 1, lat: 13.6511, lng: 100.4675, title: "แยกท่าข้าม", description: "จุดเริ่มต้นถนนพระราม 2 เชื่อมต่อกับถนนพระราม 3" },
-  { id: 2, lat: 13.5800, lng: 100.4200, title: "วัดยายร่ม", description: "วัดเก่าแก่ริมถนนพระราม 2 มีประวัติยาวนานกว่า 200 ปี" },
-  { id: 3, lat: 13.5200, lng: 100.3800, title: "ตลาดน้ำวัดไทร", description: "ตลาดน้ำโบราณ บรรยากาศย้อนยุค ริมคลองพระราม 2" },
-  { id: 4, lat: 13.4500, lng: 100.3200, title: "บางขุนเทียน", description: "ชายหาดบางขุนเทียน ป่าชายเลนผืนสุดท้ายของกรุงเทพฯ" },
-]
+export type Pin = {
+  id: number
+  lat: number
+  lng: number
+  title: string
+  description: string
+  gameId?: string
+  gameTitle?: string
+  gamePath?: string
+}
 
-export default function Map() {
+const pinsByYear: Record<number, Pin[]> = {
+  1990: [
+    {
+      id: 1,
+      lat: 13.6511,
+      lng: 100.4675,
+      title: 'แยกท่าข้าม',
+      description: 'พระราม 2 ยุคเริ่มต้น',
+    },
+  ],
+
+  2000: [
+    {
+      id: 1,
+      lat: 13.6511,
+      lng: 100.4675,
+      title: 'แยกท่าข้าม',
+      description: 'เริ่มขยายเมือง',
+      gameId: 'takham-game',
+      gameTitle: 'เกมแยกท่าข้าม',
+      gamePath: '/game/Rama2_Game/index.html',
+    },
+
+    {
+      id: 2,
+      lat: 13.58,
+      lng: 100.42,
+      title: 'วัดยายร่ม',
+      description: 'ชุมชนเริ่มหนาแน่น',
+    },
+  ],
+
+  2020: [
+    {
+      id: 1,
+      lat: 13.6511,
+      lng: 100.4675,
+      title: 'แยกท่าข้าม',
+      description: 'พื้นที่เมืองปัจจุบัน',
+      gameId: 'takham-game',
+      gameTitle: 'เกมแยกท่าข้าม',
+      gamePath: '/game/Rama2_Game/index.html',
+    },
+
+    {
+      id: 2,
+      lat: 13.45,
+      lng: 100.32,
+      title: 'บางขุนเทียน',
+      description: 'จุดท่องเที่ยวสำคัญ',
+      gameId: 'bangkhuntian-game',
+      gameTitle: 'เกมบางขุนเทียน',
+      gamePath: '/game/Rama2_Game/index.html',
+    },
+  ],
+}
+
+interface Props {
+  year: number
+  onSelect: (pin: Pin) => void
+}
+
+export default function Map({ year, onSelect }: Props) {
+  const pins = pinsByYear[year] ?? []
+
   useEffect(() => {
-    // ป้องกัน map ซ้อนทับกัน
-    const container = document.getElementById('map') as any
-    if (container._leaflet_id) return
+    const mapElement = document.getElementById('map')
 
-    const map = L.map('map').setView([13.58, 100.42], 11)
+    if (!mapElement) return
+
+    const map = L.map(mapElement).setView([13.58, 100.42], 11)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
+      attribution: '© OpenStreetMap',
     }).addTo(map)
 
-    // icon กำหนดเอง
-    const icon = L.divIcon({
-      html: '📍',
-      className: '',
-      iconSize: [30, 30],
-    })
+    pins.forEach((pin) => {
+      const icon = L.divIcon({
+        html: pin.gameId ? '🎮' : '📍',
+        className: '',
+        iconSize: [30, 30],
+      })
 
-    // วางหมุดทุกจุด
-    pins.forEach(pin => {
       L.marker([pin.lat, pin.lng], { icon })
         .addTo(map)
         .bindPopup(`
           <div style="font-family:sans-serif; padding:4px">
-            <b style="font-size:16px">${pin.title}</b>
-            <p style="color:#555; margin-top:4px">${pin.description}</p>
+            <b>${pin.title}</b>
+            <p>${pin.description}</p>
           </div>
         `)
+        .on('click', () => {
+          if (pin.gameId) {
+            onSelect(pin)
+          }
+        })
     })
-  }, [])
 
-  return <div id="map" style={{ width: '100%', height: '100%' }} />
+    return () => {
+      map.remove()
+    }
+  }, [year])
+
+  return (
+    <div
+      id="map"
+      style={{
+        width: '100%',
+        height: '100%',
+      }}
+    />
+  )
 }
