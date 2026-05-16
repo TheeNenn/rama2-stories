@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -14,62 +14,227 @@ export type Pin = {
   gamePath?: string
 }
 
-const pinsByYear: Record<number, Pin[]> = {
-  1990: [
-    {
-      id: 1,
-      lat: 13.6511,
-      lng: 100.4675,
-      title: 'แยกท่าข้าม',
-      description: 'พระราม 2 ยุคเริ่มต้น',
-    },
-  ],
-
-  2000: [
-    {
-      id: 1,
-      lat: 13.6511,
-      lng: 100.4675,
-      title: 'แยกท่าข้าม',
-      description: 'เริ่มขยายเมือง',
-      gameId: 'takham-game',
-      gameTitle: 'เกมแยกท่าข้าม',
-      gamePath: '/game/Rama2_Game/index.html',
-    },
-
-    {
-      id: 2,
-      lat: 13.58,
-      lng: 100.42,
-      title: 'วัดยายร่ม',
-      description: 'ชุมชนเริ่มหนาแน่น',
-    },
-  ],
-
-  2020: [
-    {
-      id: 1,
-      lat: 13.6511,
-      lng: 100.4675,
-      title: 'แยกท่าข้าม',
-      description: 'พื้นที่เมืองปัจจุบัน',
-      gameId: 'takham-game',
-      gameTitle: 'เกมแยกท่าข้าม',
-      gamePath: '/game/Rama2_Game/index.html',
-    },
-
-    {
-      id: 2,
-      lat: 13.45,
-      lng: 100.32,
-      title: 'บางขุนเทียน',
-      description: 'จุดท่องเที่ยวสำคัญ',
-      gameId: 'bangkhuntian-game',
-      gameTitle: 'เกมบางขุนเทียน',
-      gamePath: '/game/Rama2_Game/index.html',
-    },
-  ],
+// ---- ข้อมูลเหตุการณ์ตามปี ----
+type EventPin = {
+  id: string
+  lat: number
+  lng: number
+  year: number
+  title: string
+  body: string
+  icon: string
+  type: 'construction' | 'accident' | 'legend' | 'normal'
+  imageSrc?: string
+  imageCaption?: string
+  hasGame?: boolean
+  // รูปถนนที่ต้องต่อกันเป็นเส้นเดียว เรียงจากซ้ายไปขวา
+  roadSegments?: string[]
 }
+
+const events: EventPin[] = [
+  {
+    id: 'e1',
+    year: 1968,
+    lat: 13.72,
+    lng: 100.475,
+    title: 'ประกาศพระราชกฤษฎีกาเวนคืนที่ดิน',
+    body: 'ประกาศพระราชกฤษฎีกาเวนคืนที่ดินเพื่อสร้างทางหลวงสาย "ธนบุรี-ปากท่อ" เพื่อเป็นเส้นทางหลักลงสู่ภาคใต้แทนถนนเพชรเกษม',
+    icon: '📜',
+    type: 'normal',
+    // ไม่มีรูป → text-only
+  },
+  {
+    id: 'e2',
+    year: 1970,
+    lat: 13.65,
+    lng: 100.45,
+    title: 'เริ่มก่อสร้างอย่างเป็นทางการ',
+    body: 'เริ่มก่อสร้างอย่างเป็นทางการ ท่ามกลางสภาพพื้นที่ที่เป็นดินอ่อนและป่าชายเลน ความท้าทายด้านวิศวกรรมสูงมาก',
+    icon: '🏗️',
+    type: 'construction',
+    // ไม่มีรูป → text-only
+  },
+  {
+    id: 'e3',
+    year: 1971,
+    lat: 13.55,
+    lng: 100.38,
+    title: 'ตำนานเจ้าแม่งูจงอาง',
+    body: 'ตำนานเจ้าแม่งูจงอางเกิดขึ้นในช่วงนี้ เมื่อคนงานฝันเห็นงูมาขอเวลา แต่มีการขับรถทับครอบครัวงู จนเกิดเป็นเรื่องเล่าอาถรรพ์ที่ทำให้ถนนสร้างลำบาก',
+    icon: '🐍',
+    type: 'legend',
+    // ไม่มีรูป → text-only
+  },
+  {
+    id: 'e4',
+    year: 1973,
+    lat: 13.63,
+    lng: 100.44,
+    title: 'เปิดใช้งานครั้งแรก (1 เม.ย. 2516)',
+    body: 'เปิดเป็นถนน 2 เลนสวนกัน ไม่มีเกาะกลาง ชาวบ้านเริ่มเดินทางลงใต้สะดวกขึ้น',
+    icon: '🛣️',
+    type: 'accident',
+    imageSrc: '/assets/2516.png',
+    imageCaption: 'ถนนพระราม 2 สายแรก ปี 2516 — 2 เลน ไม่มีเกาะกลาง',
+    hasGame: true,
+  },
+  {
+    id: 'e5',
+    year: 1979,
+    lat: 13.50,
+    lng: 100.35,
+    title: 'ปัญหาถนนทรุดครั้งแรก',
+    body: 'เริ่มพบปัญหาถนนทรุดจากดินเหนียวอ่อน (Soft Bangkok Clay) ต้องซ่อมบำรุงบ่อยครั้ง',
+    icon: '⚠️',
+    type: 'accident',
+  },
+  {
+    id: 'e5b',
+    year: 1987,
+    lat: 13.62,
+    lng: 100.435,
+    title: 'ขยายถนนเป็น 4 เลน + เกาะกลาง',
+    body: 'เริ่มโครงการขยายถนนจาก 2 เลน เป็น 4 เลน และเพิ่มเกาะกลางถนนเป็นครั้งแรก เพื่อรองรับปริมาณรถที่เพิ่มขึ้น',
+    icon: '🔧',
+    type: 'construction',
+  },
+  {
+    id: 'e6',
+    year: 1989,
+    lat: 13.60,
+    lng: 100.42,
+    title: 'โครงการขยาย 10–14 เลน',
+    body: 'รัฐบาลอนุมัติโครงการขยายถนนครั้งใหญ่ที่สุดเพื่อรองรับการขยายตัวของเมืองและนิคมอุตสาหกรรม',
+    icon: '🔧',
+    type: 'construction',
+    imageSrc: '/assets/2532.png',
+    imageCaption: 'โครงการขยาย ปี 2532',
+    hasGame: true,
+  },
+  {
+    id: 'e7',
+    year: 1994,
+    lat: 13.57,
+    lng: 100.40,
+    title: '"ถนนเจ็ดชั่วโคตร"',
+    body: 'ช่วง 2535–2539 จราจรติดขัดรุนแรงที่สุด สื่อและประชาชนขนานนาม "ถนนเจ็ดชั่วโคตร" เพราะสร้างไม่เสร็จสักที',
+    icon: '😤',
+    type: 'accident',
+    imageSrc: '/assets/2539.png',
+    imageCaption: 'ถนนพระราม 2 ปี 2539 — ยุคถนนเจ็ดชั่วโคตร',
+    hasGame: true,
+  },
+  {
+    id: 'e8',
+    year: 2000,
+    lat: 13.70,
+    lng: 100.46,
+    title: 'ทางแยกต่างระดับบางขุนเทียนเสร็จ',
+    body: 'เชื่อมต่อกับถนนกาญจนาภิเษก (วงแหวนรอบนอก) ช่วยบรรเทาการจราจรได้บ้าง',
+    icon: '🔧',
+    type: 'construction',
+  },
+  {
+    id: 'e8b',
+    year: 2003,
+    lat: 13.64,
+    lng: 100.448,
+    title: 'ปรับระดับถนนหนีน้ำท่วม',
+    body: 'เริ่มมีการปรับระดับถนนให้สูงขึ้นเพื่อหนีปัญหาน้ำท่วมขังในช่วงน้ำทะเลหนุน ซึ่งส่งผลกระทบต่อการสัญจรในฤดูน้ำหลากทุกปี',
+    icon: '🌊',
+    type: 'construction',
+  },
+  {
+    id: 'e9',
+    year: 2019,
+    lat: 13.53,
+    lng: 100.37,
+    title: 'เริ่มก่อสร้างมอเตอร์เวย์ M82',
+    body: 'ก่อสร้างทางยกระดับบางขุนเทียน–บ้านแพ้ว บนเกาะกลางถนนท่ามกลางรถที่วิ่งอยู่ข้างล่าง',
+    icon: '🔧',
+    type: 'construction',
+    imageSrc: '/assets/2561.png',
+    imageCaption: 'ก่อสร้าง M82 ปี 2562',
+    hasGame: true,
+  },
+  {
+    id: 'e10',
+    year: 2022,
+    lat: 13.48,
+    lng: 100.33,
+    title: 'คานสะพานถล่ม (31 ก.ค. 2565)',
+    body: 'คานสะพานกลับรถถล่มที่ กม.34 หน้า รพ.วิภาราม ทับรถยนต์ เสียชีวิต 2 ราย เป็นข่าวดังระดับโลก',
+    icon: '❗',
+    type: 'accident',
+    imageSrc: '/assets/2565.jpg',
+    imageCaption: 'เหตุคานถล่ม ก.ค. 2565',
+  },
+  {
+    id: 'e11',
+    year: 2023,
+    lat: 13.61,
+    lng: 100.43,
+    title: 'คานเหล็ก Launcher ร่วง (7 พ.ค. 2566)',
+    body: 'คานเหล็กสำหรับยกแผ่นปูนร่วงหน้า Index Living Mall ทับรถยนต์เสียหายและมีคนงานเสียชีวิต',
+    icon: '❗',
+    type: 'accident',
+    imageSrc: '/assets/2566.png',
+    imageCaption: 'เหตุ Launcher ร่วง พ.ค. 2566',
+  },
+  {
+    id: 'e12',
+    year: 2024,
+    lat: 13.44,
+    lng: 100.31,
+    title: 'ตัวยกถล่มในสมุทรสาคร (29 พ.ย. 2567)',
+    body: 'เกิดเหตุตัวยกแผ่นปูนถล่มในเขตสมุทรสาคร คนงานเสียชีวิตรวดเดียว 3 ราย มีคำสั่งหยุดก่อสร้างชั่วคราว',
+    icon: '❗',
+    type: 'accident',
+    imageSrc: '/assets/2567.jpg',
+    imageCaption: 'เหตุถล่มสมุทรสาคร พ.ย. 2567',
+  },
+  {
+    id: 'e13',
+    year: 2025,
+    lat: 13.66,
+    lng: 100.455,
+    title: 'เครนถล่มปิดถนน (14 ม.ค. 2568)',
+    body: 'เครนถล่มปิดกั้นทุกช่องทางใน กม.28 รถติดสะสมยาวหลายสิบกิโลเมตรนานกว่า 5 ชั่วโมง',
+    icon: '❗',
+    type: 'accident',
+    imageSrc: '/assets/2568.png',
+    imageCaption: 'เครนถล่ม ม.ค. 2568',
+  },
+  {
+    id: 'e14',
+    year: 2026,
+    lat: 13.59,
+    lng: 100.415,
+    title: 'รถบรรทุกเกี่ยวสะพานลอย (2 เม.ย. 2569)',
+    body: 'รถบรรทุกเกี่ยวสะพานลอยจนโครงสร้างทรุดและป้ายโฆษณาร่วงลงขวางถนนในช่วงเช้ามืด',
+    icon: '❗',
+    type: 'accident',
+    imageSrc: '/assets/2569.jpg',
+    imageCaption: 'เหตุสะพานลอยทรุด เม.ย. 2569',
+  },
+]
+
+// colour map per type
+const typeColor: Record<EventPin['type'], string> = {
+  construction: '#f59e0b',
+  accident:     '#ef4444',
+  legend:       '#a855f7',
+  normal:       '#22d3ee',
+}
+
+const typeBg: Record<EventPin['type'], string> = {
+  construction: '#451a03',
+  accident:     '#450a0a',
+  legend:       '#3b0764',
+  normal:       '#083344',
+}
+
+// ---- Component ----
 
 interface Props {
   year: number
@@ -77,53 +242,385 @@ interface Props {
 }
 
 export default function Map({ year, onSelect }: Props) {
-  const pins = pinsByYear[year] ?? []
+  const mapRef = useRef<L.Map | null>(null)
+  const markersRef = useRef<L.Marker[]>([])
+  const [modalEvent, setModalEvent] = useState<EventPin | null>(null)
 
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // reset fullscreen when modal closes
   useEffect(() => {
-    const mapElement = document.getElementById('map')
+    if (!modalEvent) setIsFullscreen(false)
+  }, [modalEvent])
+  useEffect(() => {
+    const el = document.getElementById('map')
+    if (!el || mapRef.current) return
 
-    if (!mapElement) return
-
-    const map = L.map(mapElement).setView([13.58, 100.42], 11)
+    mapRef.current = L.map(el, { zoomControl: true }).setView([13.58, 100.42], 11)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap',
-    }).addTo(map)
-
-    pins.forEach((pin) => {
-      const icon = L.divIcon({
-        html: pin.gameId ? '🎮' : '📍',
-        className: '',
-        iconSize: [30, 30],
-      })
-
-      L.marker([pin.lat, pin.lng], { icon })
-        .addTo(map)
-        .bindPopup(`
-          <div style="font-family:sans-serif; padding:4px">
-            <b>${pin.title}</b>
-            <p>${pin.description}</p>
-          </div>
-        `)
-        .on('click', () => {
-          if (pin.gameId) {
-            onSelect(pin)
-          }
-        })
-    })
+    }).addTo(mapRef.current)
 
     return () => {
-      map.remove()
+      mapRef.current?.remove()
+      mapRef.current = null
     }
+  }, [])
+
+  // update markers when year changes
+  useEffect(() => {
+    if (!mapRef.current) return
+
+    // remove old markers
+    markersRef.current.forEach(m => m.remove())
+    markersRef.current = []
+
+    // แสดง event ทั้งหมดตั้งแต่อดีตถึงปีที่เลือก (สะสม)
+    const visible = events.filter(e => e.year <= year)
+
+    visible.forEach(ev => {
+      const color = typeColor[ev.type]
+
+      const iconFile = {
+        accident:     '/assets/accident.png',
+        construction: '/assets/instruct.png',
+        legend:       '/assets/shrine.png',
+        normal:       '/assets/shrine.png',
+      }[ev.type]
+
+      const html = `
+        <div style="
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          cursor:pointer;
+          filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        ">
+          <img
+            src="${iconFile}"
+            alt="${ev.type}"
+            style="width:52px; height:52px; object-fit:contain; display:block;"
+          />
+          <div style="
+            background:rgba(28,25,23,0.85);
+            color:${color};
+            font-size:10px;
+            font-weight:700;
+            padding:1px 6px;
+            border-radius:4px;
+            border: 1px solid ${color}55;
+            white-space:nowrap;
+            font-family: 'Sarabun', sans-serif;
+            margin-top:2px;
+          ">${ev.year + 543}</div>
+        </div>
+      `
+
+      const icon = L.divIcon({
+        html,
+        className: '',
+        iconSize: [52, 72],
+        iconAnchor: [26, 72],
+      })
+
+      const marker = L.marker([ev.lat, ev.lng], { icon })
+        .addTo(mapRef.current!)
+        .on('click', () => setModalEvent(ev))
+
+      markersRef.current.push(marker)
+    })
   }, [year])
 
   return (
-    <div
-      id="map"
-      style={{
-        width: '100%',
-        height: '100%',
-      }}
-    />
+    <>
+      <div id="map" style={{ width: '100%', height: '100%' }} />
+
+      {/* Event Modal */}
+      {modalEvent && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: isFullscreen ? typeBg[modalEvent.type] : 'rgba(0,0,0,0.65)',
+            display: 'flex',
+            alignItems: isFullscreen ? 'stretch' : 'center',
+            justifyContent: isFullscreen ? 'stretch' : 'center',
+            zIndex: 9999,
+            backdropFilter: isFullscreen ? 'none' : 'blur(4px)',
+            transition: 'background 0.3s',
+          }}
+          onClick={() => { if (!isFullscreen) setModalEvent(null) }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: typeBg[modalEvent.type],
+              border: isFullscreen ? 'none' : `1.5px solid ${typeColor[modalEvent.type]}55`,
+              borderRadius: isFullscreen ? '0' : '16px',
+              width: isFullscreen ? '100%' : 'min(480px, 92vw)',
+              height: isFullscreen ? '100%' : 'auto',
+              overflow: isFullscreen ? 'auto' : 'hidden',
+              boxShadow: isFullscreen ? 'none' : `0 0 40px ${typeColor[modalEvent.type]}44`,
+              fontFamily: "'Sarabun', sans-serif",
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'border-radius 0.3s, width 0.3s',
+            }}
+          >
+            {/* Header bar */}
+            <div style={{
+              background: typeColor[modalEvent.type],
+              padding: '10px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexShrink: 0,
+            }}>
+              <span style={{ fontWeight: 800, fontSize: 13, color: '#1c1917', letterSpacing: 1 }}>
+                {modalEvent.icon} พ.ศ. {modalEvent.year + 543}
+              </span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {/* Fullscreen toggle */}
+                <button
+                  onClick={() => setIsFullscreen(f => !f)}
+                  title={isFullscreen ? 'ย่อลง' : 'เต็มจอ'}
+                  style={{
+                    background: 'rgba(0,0,0,0.15)',
+                    border: 'none',
+                    borderRadius: 6,
+                    width: 28, height: 28,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: 14,
+                    color: '#1c1917',
+                  }}
+                >
+                  {isFullscreen ? '⊡' : '⛶'}
+                </button>
+                {/* Close */}
+                <button
+                  onClick={() => setModalEvent(null)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: 18,
+                    cursor: 'pointer',
+                    color: '#1c1917',
+                    fontWeight: 900,
+                    lineHeight: 1,
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {modalEvent.roadSegments ? (
+              <>
+                {/* Road — scroll แนวนอน แต่ละ segment เต็ม frame */}
+                <div style={{
+                  width: '100%',
+                  aspectRatio: '16/9',
+                  background: '#000',
+                  position: 'relative',
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  scrollSnapType: 'x mandatory',
+                  display: 'flex',
+                }}>
+                  {modalEvent.roadSegments.map((src, i) => (
+                    <div key={i} style={{
+                      flexShrink: 0,
+                      width: '100%',
+                      height: '100%',
+                      scrollSnapAlign: 'start',
+                      position: 'relative',
+                    }}>
+                      <img
+                        src={src}
+                        alt={`road segment ${i + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                      />
+                      {/* dot indicator */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 28,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        display: 'flex',
+                        gap: 6,
+                      }}>
+                        {modalEvent.roadSegments!.map((_, j) => (
+                          <div key={j} style={{
+                            width: 6, height: 6, borderRadius: '50%',
+                            background: i === j ? '#fff' : 'rgba(255,255,255,0.35)',
+                            transition: 'background 0.2s',
+                          }} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* caption */}
+                  {modalEvent.imageCaption && (
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
+                      padding: '20px 12px 6px',
+                      color: '#a8a29e', fontSize: 10, letterSpacing: 0.5,
+                      zIndex: 10,
+                    }}>
+                      {modalEvent.imageCaption}
+                    </div>
+                  )}
+                </div>
+
+                {/* Body */}
+                <div style={{ padding: '16px 20px 20px' }}>
+                  <h2 style={{ color: typeColor[modalEvent.type], fontSize: 18, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.4 }}>
+                    {modalEvent.title}
+                  </h2>
+                  <p style={{ color: '#d6d3d1', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+                    {modalEvent.body}
+                  </p>
+                  <div style={{ marginTop: 14 }}>
+                    <span style={{
+                      background: typeColor[modalEvent.type] + '22',
+                      border: `1px solid ${typeColor[modalEvent.type]}44`,
+                      color: typeColor[modalEvent.type],
+                      borderRadius: 100, padding: '2px 10px', fontSize: 11, fontWeight: 700,
+                    }}>
+                      {{ construction: '🔧 การก่อสร้าง', accident: '❗ อุบัติเหตุ', legend: '🐍 ตำนาน', normal: '📌 เหตุการณ์' }[modalEvent.type]}
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : modalEvent.imageSrc ? (
+              <>
+                {/* Image area */}
+                <div style={{
+                  width: '100%',
+                  height: isFullscreen ? '70%' : 200,
+                  background: '#0c0a09',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                }}>
+                  <img
+                    src={modalEvent.imageSrc}
+                    alt={modalEvent.imageCaption}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.95 }}
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+                  />
+                  {modalEvent.imageCaption && (
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                      padding: '24px 12px 8px', color: '#d6d3d1', fontSize: 11,
+                    }}>
+                      {modalEvent.imageCaption}
+                    </div>
+                  )}
+                </div>
+
+                {/* Body (with image) */}
+                <div style={{ padding: '16px 20px 20px' }}>
+                  <h2 style={{ color: typeColor[modalEvent.type], fontSize: 18, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.4 }}>
+                    {modalEvent.title}
+                  </h2>
+                  <p style={{ color: '#d6d3d1', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+                    {modalEvent.body}
+                  </p>
+                  <div style={{ marginTop: 14 }}>
+                    <span style={{
+                      background: typeColor[modalEvent.type] + '22',
+                      border: `1px solid ${typeColor[modalEvent.type]}44`,
+                      color: typeColor[modalEvent.type],
+                      borderRadius: 100, padding: '2px 10px', fontSize: 11, fontWeight: 700,
+                    }}>
+                      {{ construction: '🔧 การก่อสร้าง', accident: '❗ อุบัติเหตุ', legend: '🐍 ตำนาน', normal: '📌 เหตุการณ์' }[modalEvent.type]}
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* ── Text-only layout (ไม่มีรูป) ── */
+              <div style={{ padding: '28px 24px 24px' }}>
+                {/* Big icon + year */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+                  <div style={{
+                    width: 64, height: 64, borderRadius: '50%',
+                    background: typeColor[modalEvent.type] + '22',
+                    border: `2px solid ${typeColor[modalEvent.type]}66`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 30, flexShrink: 0,
+                    boxShadow: `0 0 20px ${typeColor[modalEvent.type]}33`,
+                  }}>
+                    {modalEvent.icon}
+                  </div>
+                  <div>
+                    <div style={{ color: typeColor[modalEvent.type], fontSize: 12, fontWeight: 700, letterSpacing: 2, marginBottom: 4 }}>
+                      {{ construction: '🔧 การก่อสร้าง', accident: '❗ อุบัติเหตุ', legend: '🐍 ตำนาน', normal: '📌 เหตุการณ์' }[modalEvent.type]}
+                    </div>
+                    <h2 style={{ color: '#f5f5f4', fontSize: 17, fontWeight: 800, margin: 0, lineHeight: 1.4 }}>
+                      {modalEvent.title}
+                    </h2>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div style={{
+                  height: 1,
+                  background: `linear-gradient(to right, ${typeColor[modalEvent.type]}44, transparent)`,
+                  marginBottom: 18,
+                }} />
+
+                {/* Body text */}
+                <p style={{
+                  color: '#e7e5e4',
+                  fontSize: 15,
+                  lineHeight: 1.85,
+                  margin: 0,
+                  fontFamily: "'Sarabun', sans-serif",
+                }}>
+                  {modalEvent.body}
+                </p>
+              </div>
+            )}
+
+            {/* ── ปุ่มเล่นเกม (เฉพาะปีที่มี hasGame) ── */}
+            {modalEvent.hasGame && (
+              <div style={{ padding: '0 20px 20px', flexShrink: 0 }}>
+                <button
+                  onClick={() => window.open('/Rama2_Game/index.html', '_blank')}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
+                    border: 'none',
+                    borderRadius: 10,
+                    color: '#fff',
+                    fontFamily: "'Sarabun', sans-serif",
+                    fontSize: 15,
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    letterSpacing: 1,
+                    boxShadow: '0 0 20px #a855f744',
+                  }}
+                >
+                  🎮 เล่นเกมพระราม 2
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
