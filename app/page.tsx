@@ -23,9 +23,20 @@ export default function Home() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const [selectedPlace, setSelectedPlace] = useState('แยกท่าข้าม')
   const [openedPin, setOpenedPin] = useState<Pin | null>(null)
-
-  // ✅ zoom state ต้องอยู่ใน component
   const [zoom, setZoom] = useState(10)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    check()
+
+    window.addEventListener('resize', check)
+
+    return () => window.removeEventListener('resize', check)
+  }, [])
   
   function startAutoPlay() {
     setIsPlaying(true)
@@ -87,7 +98,7 @@ export default function Home() {
       </div>
 
       {/* Timeline Slider */}
-      <div className="px-2 sm:px-4 py-2 bg-stone-700 text-white">
+      <div className="px-2 sm:px-4 py-1 sm:py-2 bg-stone-700 text-white">
         <div className="flex items-center gap-4">
 
           <button
@@ -153,7 +164,9 @@ export default function Home() {
         <Map
           year={selectedYear}
           zoom={zoom}
+          setZoom={setZoom}
           onSelect={handleSelect}
+          isMobile={isMobile}
         />
 
         {/* Metaverse Panel */}

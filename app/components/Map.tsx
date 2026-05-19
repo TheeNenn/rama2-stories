@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 const zoomBase = isMobile ? 8 : 10
 
+
 export type Pin = {
   id: number
   lat: number
@@ -261,10 +262,12 @@ function getBackgroundImage(year: number): string | null {
 interface Props {
   year: number
   zoom: number
+  setZoom: React.Dispatch<React.SetStateAction<number>>
   onSelect: (pin: Pin) => void
+  isMobile: boolean
 }
 
-export default function Map({ year, zoom, onSelect }: Props) {
+export default function Map({ year, zoom, setZoom,onSelect }: Props) {
   const [modalEvent, setModalEvent] = useState<EventPin | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
@@ -283,23 +286,31 @@ export default function Map({ year, zoom, onSelect }: Props) {
     <>
       {/* ---- Map Canvas ---- */}
       <div
-        onClick={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect()
+        onWheel={(e) => {
+          e.preventDefault()
 
-        const x = ((e.clientX - rect.left) / rect.width) * 100
-        const y = ((e.clientY - rect.top) / rect.height) * 100
+          const delta = e.deltaY
 
-        console.log(`x: ${x.toFixed(2)}, y: ${y.toFixed(2)}`)
-      }}
+          setZoom(prev => {
+            if (delta > 0) {
+              return Math.max(prev - 0.5, 5)
+            } else {
+              return Math.min(prev + 0.5, 18)
+            }
+          })
+        }}
 
         style={{
           width: '100%',
-          height: '100%',
+          height: isMobile ? '100dvh' : '100%',
           position: 'relative',
           overflow: 'hidden',
           background: '#0c0a09',
           touchAction: 'none',
           transform: `scale(${zoom / zoomBase})`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           transformOrigin: 'center'
         }}
       >
@@ -316,7 +327,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
               inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
+              objectFit: isMobile ? 'cover' : 'contain',
               objectPosition: 'center',
               opacity: imgLoaded ? 1 : 0,
               transition: 'opacity 0.5s ease',
