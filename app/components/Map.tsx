@@ -1,6 +1,9 @@
 'use client'
 import { useEffect, useRef, useState, useCallback } from 'react'
 
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+const zoomBase = isMobile ? 8 : 10
+
 export type Pin = {
   id: number
   lat: number
@@ -257,13 +260,15 @@ function getBackgroundImage(year: number): string | null {
 // ---- Component ----
 interface Props {
   year: number
+  zoom: number
   onSelect: (pin: Pin) => void
 }
 
-export default function Map({ year, onSelect }: Props) {
+export default function Map({ year, zoom, onSelect }: Props) {
   const [modalEvent, setModalEvent] = useState<EventPin | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
+  const mapRef = useRef<any>(null)
 
   useEffect(() => {
     if (!modalEvent) setIsFullscreen(false)
@@ -293,6 +298,9 @@ export default function Map({ year, onSelect }: Props) {
           position: 'relative',
           overflow: 'hidden',
           background: '#0c0a09',
+          touchAction: 'none',
+          transform: `scale(${zoom / zoomBase})`,
+          transformOrigin: 'center'
         }}
       >
         {/* Background image */}
@@ -684,3 +692,4 @@ export default function Map({ year, onSelect }: Props) {
     </>
   )
 }
+
