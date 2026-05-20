@@ -26,6 +26,9 @@ export default function Home() {
   const [zoom, setZoom] = useState(10)
   const [isMobile, setIsMobile] = useState(false)
 
+  const MIN_ZOOM = 6
+  const MAX_ZOOM = 40
+
   useEffect(() => {
     const check = () => {
       setIsMobile(window.innerWidth < 768)
