@@ -155,7 +155,7 @@ export default function Home() {
         {/* 🔥 Zoom Controls (อยู่ใน Map container แล้ว) */}
         <div className="absolute top-12 right-2 sm:top-14 sm:right-4 flex flex-col gap-2 z-10">
           <button
-            onClick={() => setZoom(z => Math.min(z + 1, 18))}
+            onClick={() => setZoom(z => Math.min(z + 1, 60))}
             className="bg-white px-2 py-1 rounded shadow"
           >
             +
