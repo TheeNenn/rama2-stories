@@ -77,7 +77,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="w-screen h-screen flex flex-col overflow-hidden bg-black">
+    <main className="w-screen h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#290f28' }}>
 
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 bg-stone-800 shadow">

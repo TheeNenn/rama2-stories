@@ -71,8 +71,8 @@ const events: EventPin[] = [
     body: 'เปิดเป็นถนน 2 เลนสวนกัน ไม่มีเกาะกลาง ชาวบ้านเริ่มเดินทางลงใต้สะดวกขึ้น',
     icon: '🛣️',
     type: 'accident',
-    // imageCaption: 'ถนนพระราม 2 สายแรก ปี 2516 — 2 เลน ไม่มีเกาะกลาง',
-    // hasGame: true,
+    imageCaption: 'ถนนพระราม 2 สายแรก ปี 2516 — 2 เลน ไม่มีเกาะกลาง',
+    hasGame: true,
   },
   {
     id: 'e5',
@@ -150,8 +150,8 @@ const events: EventPin[] = [
     icon: '🔧',
     type: 'construction',
     // imageSrc: '/assets/2561.png',
-    imageCaption: 'ก่อสร้าง M82 ปี 2562',
-    hasGame: true,
+    // imageCaption: 'ก่อสร้าง M82 ปี 2562',
+    // hasGame: true,
   },
   {
     id: 'e10',
@@ -368,7 +368,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
           height: '100%',
           position: 'relative',
           overflow: 'hidden',
-          background: '#0c0a09',
+          background: '#290f28',
           touchAction: 'none',
           transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
           transformOrigin: 'center',
@@ -399,7 +399,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse at 60% 40%, #1c1917 0%, #0c0a09 100%)',
+            background: 'radial-gradient(ellipse at 60% 40%, #3d1a3c 0%, #290f28 100%)',
           }} />
         )}
 
@@ -407,9 +407,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: bgImage
-            ? 'rgba(0,0,0,0.25)'
-            : 'transparent',
+          background: 'transparent',
           pointerEvents: 'none',
         }} />
 
@@ -656,7 +654,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
                 <div style={{
                   width: '100%',
                   height: isFullscreen ? '70%' : 200,
-                  background: '#0c0a09',
+                  background: '#290f28',
                   position: 'relative',
                   overflow: 'hidden',
                   flexShrink: 0,
