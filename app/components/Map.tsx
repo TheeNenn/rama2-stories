@@ -35,8 +35,8 @@ const events: EventPin[] = [
   {
     id: 'e1',
     year: 1968,
-    x: 78.50,
-    y: 11.86,
+    x:  77.08,
+    y: 13.57,
     title: 'ประกาศพระราชกฤษฎีกาเวนคืนที่ดิน',
     body: 'ประกาศพระราชกฤษฎีกาเวนคืนที่ดินเพื่อสร้างทางหลวงสาย "ธนบุรี-ปากท่อ" เพื่อเป็นเส้นทางหลักลงสู่ภาคใต้แทนถนนเพชรเกษม',
     icon: '📜',
@@ -45,8 +45,8 @@ const events: EventPin[] = [
   {
     id: 'e2',
     year: 1970,
-    x: 74.44,
-    y: 15.80,
+    x:  77.08,
+    y: 13.57,
     title: 'เริ่มก่อสร้างอย่างเป็นทางการ',
     body: 'เริ่มก่อสร้างอย่างเป็นทางการ ท่ามกลางสภาพพื้นที่ที่เป็นดินอ่อนและป่าชายเลน ความท้าทายด้านวิศวกรรมสูงมาก',
     icon: '🏗️',
@@ -55,8 +55,8 @@ const events: EventPin[] = [
   {
     id: 'e3',
     year: 1971,
-    x: 71.12,
-    y: 18.86,
+    x:  77.08,
+    y: 13.57,
     title: 'ตำนานเจ้าแม่งูจงอาง',
     body: 'ตำนานเจ้าแม่งูจงอางเกิดขึ้นในช่วงนี้ เมื่อคนงานฝันเห็นงูมาขอเวลา แต่มีการขับรถทับครอบครัวงู จนเกิดเป็นเรื่องเล่าอาถรรพ์ที่ทำให้ถนนสร้างลำบาก',
     icon: '🐍',
@@ -65,20 +65,20 @@ const events: EventPin[] = [
   {
     id: 'e4',
     year: 1973,
-    x: 68.01,
-    y: 23.34,
+    x:  77.08,
+    y: 13.57,
     title: 'เปิดใช้งานครั้งแรก (1 เม.ย. 2516)',
     body: 'เปิดเป็นถนน 2 เลนสวนกัน ไม่มีเกาะกลาง ชาวบ้านเริ่มเดินทางลงใต้สะดวกขึ้น',
     icon: '🛣️',
     type: 'accident',
-    imageCaption: 'ถนนพระราม 2 สายแรก ปี 2516 — 2 เลน ไม่มีเกาะกลาง',
-    hasGame: true,
+    // imageCaption: 'ถนนพระราม 2 สายแรก ปี 2516 — 2 เลน ไม่มีเกาะกลาง',
+    // hasGame: true,
   },
   {
     id: 'e5',
     year: 1979,
-    x: 65.44,
-    y: 28.37,
+    x:  77.08,
+    y: 13.57,
     title: 'ปัญหาถนนทรุดครั้งแรก',
     body: 'เริ่มพบปัญหาถนนทรุดจากดินเหนียวอ่อน (Soft Bangkok Clay) ต้องซ่อมบำรุงบ่อยครั้ง',
     icon: '⚠️',
@@ -87,8 +87,8 @@ const events: EventPin[] = [
   {
     id: 'e5b',
     year: 1987,
-    x: 62.26,
-    y: 30.34,
+    x:  77.08,
+    y: 13.57,
     title: 'ขยายถนนเป็น 4 เลน + เกาะกลาง',
     body: 'เริ่มโครงการขยายถนนจาก 2 เลน เป็น 4 เลน และเพิ่มเกาะกลางถนนเป็นครั้งแรก เพื่อรองรับปริมาณรถที่เพิ่มขึ้น',
     icon: '🔧',
@@ -104,27 +104,27 @@ const events: EventPin[] = [
     icon: '🔧',
     type: 'construction',
     // imageSrc: '/assets/2532.png',
-    imageCaption: 'โครงการขยาย ปี 2532',
-    hasGame: true,
+    // imageCaption: 'โครงการขยาย ปี 2532',
+    // hasGame: true,
   },
   {
     id: 'e7',
     year: 1994,
-    x: 55.36,
-    y: 36.09,
+    x: 59.01,
+    y: 33.39,
     title: '"ถนนเจ็ดชั่วโคตร"',
     body: 'ช่วง 2535–2539 จราจรติดขัดรุนแรงที่สุด สื่อและประชาชนขนานนาม "ถนนเจ็ดชั่วโคตร" เพราะสร้างไม่เสร็จสักที',
     icon: '😤',
     type: 'accident',
     // imageSrc: '/assets/2539.png',
-    imageCaption: 'ถนนพระราม 2 ปี 2539 — ยุคถนนเจ็ดชั่วโคตร',
-    hasGame: true,
+    // imageCaption: 'ถนนพระราม 2 ปี 2539 — ยุคถนนเจ็ดชั่วโคตร',
+    // hasGame: true,
   },
   {
     id: 'e8',
     year: 2000,
-    x: 52.51,
-    y: 39.14,
+    x: 69.91,
+    y: 20.05,
     title: 'ทางแยกต่างระดับบางขุนเทียนเสร็จ',
     body: 'เชื่อมต่อกับถนนกาญจนาภิเษก (วงแหวนรอบนอก) ช่วยบรรเทาการจราจรได้บ้าง',
     icon: '🔧',
@@ -133,8 +133,8 @@ const events: EventPin[] = [
   {
     id: 'e8b',
     year: 2003,
-    x: 49.13,
-    y: 45.96,
+    x: 53.46,
+    y: 42.26,
     title: 'ปรับระดับถนนหนีน้ำท่วม',
     body: 'เริ่มมีการปรับระดับถนนให้สูงขึ้นเพื่อหนีปัญหาน้ำท่วมขังในช่วงน้ำทะเลหนุน ซึ่งส่งผลกระทบต่อการสัญจรในฤดูน้ำหลากทุกปี',
     icon: '🌊',
@@ -143,8 +143,8 @@ const events: EventPin[] = [
   {
     id: 'e9',
     year: 2019,
-    x: 72.95,
-    y: 14.19,
+    x: 68.96,
+    y: 22.05,
     title: 'เริ่มก่อสร้างมอเตอร์เวย์ M82',
     body: 'ก่อสร้างทางยกระดับบางขุนเทียน–บ้านแพ้ว บนเกาะกลางถนนท่ามกลางรถที่วิ่งอยู่ข้างล่าง',
     icon: '🔧',
@@ -156,62 +156,67 @@ const events: EventPin[] = [
   {
     id: 'e10',
     year: 2022,
-    x: 70.38,
-    y: 16.52,
+    x: 55.69,
+    y: 40.26,
     title: 'คานสะพานถล่ม (31 ก.ค. 2565)',
     body: 'คานสะพานกลับรถถล่มที่ กม.34 หน้า รพ.วิภาราม ทับรถยนต์ เสียชีวิต 2 ราย เป็นข่าวดังระดับโลก',
     icon: '❗',
     type: 'accident',
     imageSrc: '/assets/2565.jpg',
     imageCaption: 'เหตุคานถล่ม ก.ค. 2565',
+    hasGame: true,
   },
   {
     id: 'e11',
     year: 2023,
-    x: 75.52,
-    y: 11.32,
+    x: 62.06,
+    y: 29.15,
     title: 'คานเหล็ก Launcher ร่วง (7 พ.ค. 2566)',
     body: 'คานเหล็กสำหรับยกแผ่นปูนร่วงหน้า Index Living Mall ทับรถยนต์เสียหายและมีคนงานเสียชีวิต',
     icon: '❗',
     type: 'accident',
     imageSrc: '/assets/2566.png',
     imageCaption: 'เหตุ Launcher ร่วง พ.ค. 2566',
+    hasGame: true,
   },
   {
     id: 'e12',
     year: 2024,
-    x: 72.61,
-    y: 13.29,
+    x: 55.69,
+    y: 40.26,
     title: 'ตัวยกถล่มในสมุทรสาคร (29 พ.ย. 2567)',
     body: 'เกิดเหตุตัวยกแผ่นปูนถล่มในเขตสมุทรสาคร คนงานเสียชีวิตรวดเดียว 3 ราย มีคำสั่งหยุดก่อสร้างชั่วคราว',
     icon: '❗',
     type: 'accident',
     imageSrc: '/assets/2567.jpg',
     imageCaption: 'เหตุถล่มสมุทรสาคร พ.ย. 2567',
+    hasGame: true,
   },
   {
     id: 'e13',
     year: 2025,
-    x: 70.73,
-    y: 29.80,
+    x: 62.06,
+    y: 29.15,
     title: 'เครนถล่มปิดถนน (14 ม.ค. 2568)',
     body: 'เครนถล่มปิดกั้นทุกช่องทางใน กม.28 รถติดสะสมยาวหลายสิบกิโลเมตรนานกว่า 5 ชั่วโมง',
     icon: '❗',
     type: 'accident',
     imageSrc: '/assets/2568.png',
     imageCaption: 'เครนถล่ม ม.ค. 2568',
+    hasGame: true,
   },
   {
     id: 'e14',
     year: 2026,
-    x: 76.00,
-    y: 22.80,
+    x: 55.69,
+    y: 40.26,
     title: 'รถบรรทุกเกี่ยวสะพานลอย (2 เม.ย. 2569)',
     body: 'รถบรรทุกเกี่ยวสะพานลอยจนโครงสร้างทรุดและป้ายโฆษณาร่วงลงขวางถนนในช่วงเช้ามืด',
     icon: '❗',
     type: 'accident',
     imageSrc: '/assets/2569.jpg',
     imageCaption: 'เหตุสะพานลอยทรุด เม.ย. 2569',
+    hasGame: true,
   },
 ]
 
@@ -250,8 +255,9 @@ const typeBg: Record<EventPin['type'], string> = {
 function getBackgroundImage(year: number): string | null {
   // ปรับ path ให้ตรงกับไฟล์จริงในโปรเจค
   if (year >= 1968 && year <= 1972) return '/assets/2511-2515.png'
-  if (year >= 1973 && year <= 1992) return '/assets/2516-2535.png'
-  if (year >= 1993 && year <= 2017) return '/assets/2536-2560.png'
+  if (year >= 1973 && year <= 1988) return '/assets/2516-2531.png'
+  if (year >= 1989 && year <= 1995) return '/assets/2532-2538.png'
+  if (year >= 1996 && year <= 2017) return '/assets/2539-2560.png'
   if (year >= 2018 && year <= 2026) return '/assets/2561-2569.png'
   // ปีอื่น ๆ ยังไม่มีรูป → คืน null (ใช้พื้นหลังสีเข้ม)
   return null
@@ -270,28 +276,93 @@ export default function Map({ year, zoom, onSelect }: Props) {
   const [imgLoaded, setImgLoaded] = useState(false)
   const mapRef = useRef<any>(null)
 
+  // Pan state
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  const isDragging = useRef(false)
+  const dragStart = useRef({ x: 0, y: 0 })
+  const offsetAtDragStart = useRef({ x: 0, y: 0 })
+  const scale = zoom / zoomBase
+
+  // Reset offset when zoom returns to base
+  useEffect(() => {
+    if (zoom === zoomBase) setOffset({ x: 0, y: 0 })
+  }, [zoom])
+
   useEffect(() => {
     if (!modalEvent) setIsFullscreen(false)
   }, [modalEvent])
 
+  // Mouse drag handlers
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if (scale <= 1) return
+    isDragging.current = true
+    dragStart.current = { x: e.clientX, y: e.clientY }
+    offsetAtDragStart.current = offset
+    e.preventDefault()
+  }, [scale, offset])
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current) return
+    const dx = e.clientX - dragStart.current.x
+    const dy = e.clientY - dragStart.current.y
+    setOffset({ x: offsetAtDragStart.current.x + dx, y: offsetAtDragStart.current.y + dy })
+  }, [])
+
+  const onMouseUp = useCallback(() => { isDragging.current = false }, [])
+
+  // Touch drag handlers
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if (scale <= 1) return
+    const t = e.touches[0]
+    isDragging.current = true
+    dragStart.current = { x: t.clientX, y: t.clientY }
+    offsetAtDragStart.current = offset
+  }, [scale, offset])
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return
+    const t = e.touches[0]
+    const dx = t.clientX - dragStart.current.x
+    const dy = t.clientY - dragStart.current.y
+    setOffset({ x: offsetAtDragStart.current.x + dx, y: offsetAtDragStart.current.y + dy })
+  }, [])
+
+  const onTouchEnd = useCallback(() => { isDragging.current = false }, [])
+
   const bgImage = getBackgroundImage(year)
   const visible = events.filter(
-  e => e.year <= year && (year - e.year) < 5
-)
+    e => e.year === year
+  )
 
   return (
     <>
+      {/* ---- Pan+Zoom Wrapper ---- */}
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          position: 'relative',
+          cursor: scale > 1 ? (isDragging.current ? 'grabbing' : 'grab') : 'default',
+          userSelect: 'none',
+        }}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
       {/* ---- Map Canvas ---- */}
       <div
         onClick={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect()
-
-        const x = ((e.clientX - rect.left) / rect.width) * 100
-        const y = ((e.clientY - rect.top) / rect.height) * 100
-
-        console.log(`x: ${x.toFixed(2)}, y: ${y.toFixed(2)}`)
-      }}
-
+          if (isDragging.current) return
+          const rect = e.currentTarget.getBoundingClientRect()
+          const x = ((e.clientX - rect.left) / rect.width) * 100
+          const y = ((e.clientY - rect.top) / rect.height) * 100
+          console.log(`x: ${x.toFixed(2)}, y: ${y.toFixed(2)}`)
+        }}
         style={{
           width: '100%',
           height: '100%',
@@ -299,8 +370,9 @@ export default function Map({ year, zoom, onSelect }: Props) {
           overflow: 'hidden',
           background: '#0c0a09',
           touchAction: 'none',
-          transform: `scale(${zoom / zoomBase})`,
-          transformOrigin: 'center'
+          transform: `scale(${scale}) translate(${offset.x / scale}px, ${offset.y / scale}px)`,
+          transformOrigin: 'center',
+          transition: isDragging.current ? 'none' : 'transform 0.2s ease',
         }}
       >
         {/* Background image */}
@@ -441,6 +513,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
           พ.ศ. {year + 543}
         </div>
       </div>
+      </div>{/* end pan+zoom wrapper */}
 
       {/* ---- Event Modal ---- */}
       {modalEvent && (
@@ -692,4 +765,3 @@ export default function Map({ year, zoom, onSelect }: Props) {
     </>
   )
 }
-

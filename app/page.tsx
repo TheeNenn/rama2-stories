@@ -77,7 +77,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="w-screen h-screen flex flex-col overflow-hidden bg-stone-900">
+    <main className="w-screen h-screen flex flex-col overflow-hidden bg-black">
 
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 bg-stone-800 shadow">
@@ -115,17 +115,23 @@ export default function Home() {
           </span>
         </div>
 
-        {/* milestone buttons */}
-        <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto whitespace-nowrap text-xs text-stone-400 mt-1 px-0">
-          {[2511, 2516, 2532, 2543, 2562, 2565, 2569].map(be => (
-            <button
-              key={be}
-              onClick={() => setSelectedYear(be - 543)}
-              className="hover:text-yellow-400 transition"
-            >
-              {be}
-            </button>
-          ))}
+        {/* event year buttons — ปีที่มีเหตุการณ์จริง */}
+        <div className="flex justify-between mt-1 pb-1">
+          {[1968,1970,1971,1973,1979,1987,1989,1994,2000,2003,2019,2022,2023,2024,2025,2026].map(ce => {
+            const isActive = selectedYear === ce
+            return (
+              <button
+                key={ce}
+                onClick={() => setSelectedYear(ce)}
+                className={`
+                  text-xs font-bold transition-all
+                  ${isActive ? 'text-yellow-400' : 'text-stone-400 hover:text-yellow-400'}
+                `}
+              >
+                {ce + 543}
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -133,7 +139,7 @@ export default function Home() {
       <div className="flex-1 relative overflow-hidden">
 
         {/* 🔥 Zoom Controls (อยู่ใน Map container แล้ว) */}
-        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex flex-col gap-2 z-10">
+        <div className="absolute top-12 right-2 sm:top-14 sm:right-4 flex flex-col gap-2 z-10">
           <button
             onClick={() => setZoom(z => Math.min(z + 1, 18))}
             className="bg-white px-2 py-1 rounded shadow"
