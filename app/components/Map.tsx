@@ -267,10 +267,11 @@ function getBackgroundImage(year: number): string | null {
 interface Props {
   year: number
   zoom: number
+  setZoom: React.Dispatch<React.SetStateAction<number>>
   onSelect: (pin: Pin) => void
 }
 
-export default function Map({ year, zoom, onSelect }: Props) {
+export default function Map({ year, zoom, setZoom, onSelect }: Props) {
   const [modalEvent, setModalEvent] = useState<EventPin | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
@@ -282,6 +283,24 @@ export default function Map({ year, zoom, onSelect }: Props) {
   const dragStart = useRef({ x: 0, y: 0 })
   const offsetAtDragStart = useRef({ x: 0, y: 0 })
   const scale = zoom / zoomBase
+
+  const MIN_ZOOM = 5
+  const MAX_ZOOM = 40
+
+  const onWheel = useCallback(
+    (e: React.WheelEvent) => {
+      e.preventDefault()
+
+      if (e.deltaY < 0) {
+        // หมุนขึ้น = ซูมเข้า
+        setZoom(z => Math.min(z + 1, MAX_ZOOM))
+      } else {
+        // หมุนลง = ซูมออก
+        setZoom(z => Math.max(z - 1, MIN_ZOOM))
+      }
+    },
+    [setZoom]
+  )
 
   // Reset offset when zoom returns to base
   useEffect(() => {
@@ -338,6 +357,7 @@ export default function Map({ year, zoom, onSelect }: Props) {
     <>
       {/* ---- Pan+Zoom Wrapper ---- */}
       <div
+        onWheel={onWheel}
         style={{
           width: '100%',
           height: '100%',
